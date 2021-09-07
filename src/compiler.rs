@@ -51,6 +51,7 @@ where PS: AsRef<Path>, PT: AsRef<Path> {
 
     fn is_gradle(&self) -> Result<bool> {
         let src = self.source_dir.as_ref();
+        trace!("Reading directory '{:?} for project type identification'", &src);
         let paths = fs::read_dir(src)?;
 
         for path in paths {
