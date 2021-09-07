@@ -27,6 +27,8 @@ jobs:
     needs:
     - release
     steps:
+    - uses: actions/checkout@v2
+
     # Dependencies
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y make gcc libssl-dev
@@ -38,7 +40,7 @@ jobs:
       run: rustup target add x86_64-unknown-linux-gnu
     
     # Build
-    - name: Build library
+    - name: Build
       run: cargo build --lib --release --target x86_64-unknown-linux-gnu
 
     #Attach compiled binary to release
