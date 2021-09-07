@@ -1,0 +1,14 @@
+[package]
+name = "flight_controller"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+git2 = "0.13.21"
+clap = "2.33.3"
+log = "0.4.14"
+anyhow = "1.0.43"
+env_logger = "0.9.0"
+temp-dir = "0.1.11"
+thiserror = "1.0.29"
+rayon = "1.5.1"
