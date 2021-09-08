@@ -74,6 +74,7 @@ pub(crate) fn clone_repo(url: &str, config: &Config) -> anyhow::Result<LocalRepo
     info!("Cloning repository '{}/{}'", &owner, &name);
     trace!("Cloning into {:?}", &path);
     let repo = LocalRepo::clone(url, path, owner, name)?;
+    tmpdir.leak();
 
     Ok(repo)
 }

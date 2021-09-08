@@ -51,7 +51,7 @@ where PS: AsRef<Path>, PT: AsRef<Path> {
 
     fn is_gradle(&self) -> Result<bool> {
         let src = self.source_dir.as_ref();
-        trace!("Reading directory '{:?} for project type identification'", &src);
+        trace!("Reading directory {:?} for project type identification", &src);
         let paths = fs::read_dir(src)?;
 
         for path in paths {
@@ -78,7 +78,9 @@ where PS: AsRef<Path>, PT: AsRef<Path> {
             return Err(CompilerError::UnsupportedProject.into());
         };
 
+        trace!("Starting compilation for module '{}'", &self.mod_name);
         compiler.compile()?;
+        trace!("Module '{}' compiled, copying", &self.mod_name);
         compiler.copy()?;
 
         Ok(())
@@ -112,6 +114,14 @@ impl<'a, PS, PT> Compiler for GradleCompiler<'a, PS, PT> where PS: AsRef<Path>, 
         gradlew.push("gradlew.bat");
         #[cfg(not(windows))]
         gradlew.push("gradlew");
+
+        #[cfg(not(windows))]
+        {
+            trace!("Applying 0o770 permissions to gradlew script for module '{}'", &self.cmp.mod_name);
+            use std::os::unix::fs::PermissionsExt;
+            let perms = PermissionsExt::from_mode(0o770);
+            fs::set_permissions(&gradlew, perms)?;
+        }
 
         let compilation_status = Command::new(gradlew)
             .args(&["build"])
